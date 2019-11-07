@@ -20,7 +20,10 @@ import uk.ac.leeds.ccg.andyt.generic.core.Generic_Environment;
 import uk.ac.leeds.ccg.andyt.generic.io.Generic_IO;
 
 /**
+ * General Object for this code base.
+ * 
  * @author Andy Turner
+ * @version 1.0.0
  */
 public abstract class WaASCG_Object implements Serializable {
 

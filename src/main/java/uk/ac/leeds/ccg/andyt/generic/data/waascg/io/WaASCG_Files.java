@@ -47,12 +47,6 @@ public class WaASCG_Files extends Data_Files {
         return r;
     }
     
-    public File getGeneratedWaASSubsetsDir() {
-        File f = new File(getGeneratedWaASDir(), WaASCG_Strings.s_Subsets);
-        f.mkdirs();
-        return f;
-    }
-    
     /**
      * @param wave the wave for which the source input File is returned.
      * @param type

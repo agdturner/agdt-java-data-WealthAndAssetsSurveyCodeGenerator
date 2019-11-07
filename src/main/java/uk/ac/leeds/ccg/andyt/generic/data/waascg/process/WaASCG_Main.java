@@ -422,9 +422,9 @@ public class WaASCG_Main extends WaASCG_Object {
         String prepend = WaASCG_Strings.s_WaAS + WaASCG_Strings.symbol_underscore;
         type = type.toUpperCase().substring(0, 1);
 
-        for (int w = 0; w <= nwaves; w++) {
+        for (int w = 0; w <= nwaves + 3; w++) {
             if (w < nwaves) {
-                // Abstract classes
+                // Classes
                 wave = w + 1;
                 HashMap<String, Byte> v0m;
                 v0m = v0ms[w];
@@ -432,6 +432,7 @@ public class WaASCG_Main extends WaASCG_Object {
                 fout = new File(outdir, className + ".java");
                 pw = io.getPrintWriter(fout, false);
                 writeHeaderPackageAndImports(pw, packageName, getImports0());
+                boolean isAbstract = false;
                 switch (w) {
                     case 0:
                         extendedClassName = prepend + "W1W2" + type + "Record";
@@ -452,7 +453,6 @@ public class WaASCG_Main extends WaASCG_Object {
                         extendedClassName = "";
                         break;
                 }
-                boolean isAbstract = true;
                 printClassDeclarationSerialVersionUID(pw, packageName,
                         className, isAbstract, "", extendedClassName);
                 // Print Field Declarations Inits And Getters
@@ -482,8 +482,10 @@ public class WaASCG_Main extends WaASCG_Object {
                     //String implementations = "Serializable";
                     String implementations = "";
                     printClassDeclarationSerialVersionUID(pw, packageName,
-                            className, isAbstract, implementations, "");
+                            className, isAbstract, implementations, "Data_Record");
+                    pw.println();
                     pw.println(getIndent(1) + "protected String[] s;");
+                    printConstructor(pw, className);
                 } else if (w == (nwaves + 1)) {
                     className = prepend + "W1W2" + type + "Record";
                     fout = new File(outdir, className + ".java");
@@ -511,7 +513,6 @@ public class WaASCG_Main extends WaASCG_Object {
                     printClassDeclarationSerialVersionUID(pw, packageName,
                             className, isAbstract, "", extendedClassName);
                     printConstructor(pw, className);
-                    printGetID(pw);
                 }
                 // Print Field Declarations Inits And Getters
                 printFieldDeclarationsInitsAndGetters(pw, fields[w], fieldTypes, v0m0);
