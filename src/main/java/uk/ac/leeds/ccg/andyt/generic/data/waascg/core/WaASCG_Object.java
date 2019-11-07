@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.leeds.ccg.andyt.generic.data.waas.core;
+package uk.ac.leeds.ccg.andyt.generic.data.waascg.core;
 
 import java.io.Serializable;
 import uk.ac.leeds.ccg.andyt.generic.core.Generic_Environment;
@@ -22,9 +22,9 @@ import uk.ac.leeds.ccg.andyt.generic.io.Generic_IO;
 /**
  * @author Andy Turner
  */
-public abstract class WaASCJ_Object implements Serializable {
+public abstract class WaASCG_Object implements Serializable {
 
-    public transient final WaASCJ_Environment we;
+    public transient final WaASCG_Environment we;
     
     /**
      * For convenience
@@ -32,7 +32,7 @@ public abstract class WaASCJ_Object implements Serializable {
     public transient final Generic_Environment env;
     public transient final Generic_IO io;
 
-    public WaASCJ_Object(WaASCJ_Environment e) {
+    public WaASCG_Object(WaASCG_Environment e) {
         this.we = e;
         env = e.env;
         io = env.io;

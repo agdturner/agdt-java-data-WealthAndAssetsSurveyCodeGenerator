@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.leeds.ccg.andyt.generic.data.waas.core;
+package uk.ac.leeds.ccg.andyt.generic.data.waascg.core;
 
 import java.io.File;
 import java.io.IOException;
 import uk.ac.leeds.ccg.andyt.data.core.Data_Environment;
 import uk.ac.leeds.ccg.andyt.generic.core.Generic_Environment;
-import uk.ac.leeds.ccg.andyt.generic.data.waas.io.WaASCJ_Files;
+import uk.ac.leeds.ccg.andyt.generic.data.waascg.io.WaASCG_Files;
 import uk.ac.leeds.ccg.andyt.generic.io.Generic_IO;
 
 /**
  *
  * @author geoagdt
  */
-public class WaASCJ_Environment {
+public class WaASCG_Environment {
 
     public transient final Data_Environment de;
-    public transient final WaASCJ_Files files;
+    public transient final WaASCG_Files files;
     public transient final Generic_Environment env;
     public transient final Generic_IO io;
     
@@ -45,10 +45,10 @@ public class WaASCJ_Environment {
      */
     public transient final byte NWAVES = 5;
 
-    public WaASCJ_Environment(Data_Environment e, File dataDir) throws IOException {
+    public WaASCG_Environment(Data_Environment e, File dataDir) throws IOException {
         de = e;
         env = e.env;
         io = env.io;
-        files = new WaASCJ_Files(dataDir);
+        files = new WaASCG_Files(dataDir);
     }
 }

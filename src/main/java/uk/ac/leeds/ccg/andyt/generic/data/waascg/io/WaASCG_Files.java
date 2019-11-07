@@ -13,41 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.leeds.ccg.andyt.generic.data.waas.io;
+package uk.ac.leeds.ccg.andyt.generic.data.waascg.io;
 
 import java.io.File;
 import java.io.IOException;
 import uk.ac.leeds.ccg.andyt.data.io.Data_Files;
-import uk.ac.leeds.ccg.andyt.generic.data.waas.core.WaASCJ_Strings;
+import uk.ac.leeds.ccg.andyt.generic.data.waascg.core.WaASCG_Strings;
 
 /**
  *
  * @author geoagdt
  */
-public class WaASCJ_Files extends Data_Files {
+public class WaASCG_Files extends Data_Files {
 
     /**
      * @param dataDir
+     * @throws java.io.IOException
      */
-    public WaASCJ_Files(File dataDir) throws IOException {
+    public WaASCG_Files(File dataDir) throws IOException {
         super(dataDir);
     }
 
     public File getInputWaASDir() {
-        File r = new File(getInputDir(), WaASCJ_Strings.s_WaAS);
+        File r = new File(getInputDir(), WaASCG_Strings.s_WaAS);
         r = new File(r, "UKDA-7215-tab");
         r = new File(r, "tab");
         return r;
     }
 
     public File getGeneratedWaASDir() {
-        File r  = new File(getGeneratedDir(), WaASCJ_Strings.s_WaAS);
+        File r  = new File(getGeneratedDir(), WaASCG_Strings.s_WaAS);
         r.mkdirs();
         return r;
     }
     
     public File getGeneratedWaASSubsetsDir() {
-        File f = new File(getGeneratedWaASDir(), WaASCJ_Strings.s_Subsets);
+        File f = new File(getGeneratedWaASDir(), WaASCG_Strings.s_Subsets);
         f.mkdirs();
         return f;
     }

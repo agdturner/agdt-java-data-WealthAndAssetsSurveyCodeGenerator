@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.leeds.ccg.andyt.generic.data.waas.core;
+package uk.ac.leeds.ccg.andyt.generic.data.waascg.core;
 
 import uk.ac.leeds.ccg.andyt.data.core.Data_Strings;
 
@@ -21,7 +21,7 @@ import uk.ac.leeds.ccg.andyt.data.core.Data_Strings;
  *
  * @author geoagdt
  */
-public class WaASCJ_Strings extends Data_Strings {
+public class WaASCG_Strings extends Data_Strings {
 
     public static final String PROJECT_NAME = "agdt-java-generic-data-WealthAndAssetsSurvey";
 
@@ -47,7 +47,7 @@ public class WaASCJ_Strings extends Data_Strings {
     public static final String s_w4 = "w4";
     public static final String s_w5 = "w5";
 
-    public WaASCJ_Strings() {
+    public WaASCG_Strings() {
         super();
     }
 }

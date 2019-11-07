@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.leeds.ccg.andyt.generic.data.waas.process;
+package uk.ac.leeds.ccg.andyt.generic.data.waascg.process;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,10 +29,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import uk.ac.leeds.ccg.andyt.data.core.Data_Environment;
 import uk.ac.leeds.ccg.andyt.generic.core.Generic_Environment;
-import uk.ac.leeds.ccg.andyt.generic.core.Generic_Strings;
-import uk.ac.leeds.ccg.andyt.generic.data.waas.core.WaASCJ_Environment;
-import uk.ac.leeds.ccg.andyt.generic.data.waas.core.WaASCJ_Object;
-import uk.ac.leeds.ccg.andyt.generic.data.waas.core.WaASCJ_Strings;
+import uk.ac.leeds.ccg.andyt.generic.data.waascg.core.WaASCG_Environment;
+import uk.ac.leeds.ccg.andyt.generic.data.waascg.core.WaASCG_Object;
+import uk.ac.leeds.ccg.andyt.generic.data.waascg.core.WaASCG_Strings;
 import uk.ac.leeds.ccg.andyt.math.Math_Byte;
 import uk.ac.leeds.ccg.andyt.math.Math_Double;
 import uk.ac.leeds.ccg.andyt.math.Math_Integer;
@@ -47,8 +46,8 @@ import uk.ac.leeds.ccg.andyt.math.Math_Short;
  * Source code classes written in order to load the WaAS person data are written
  * to uk.ac.leeds.ccg.andyt.generic.data.waas.data.person.
  *
- * As the WaAS data contains many variables, it was thought best to write
- * some code that wrote some code to load these data and provide access to the
+ * As the WaAS data contains many variables, it was thought best to write some
+ * code that wrote some code to load these data and provide access to the
  * variables. Most variables are loaded as Double types. Some such as dates have
  * been loaded as String types. There are documents:
  * data/input/WaAS/UKDA-7215-tab/mrdoc/pdf/7215_was_questionnaire_wave_1.pdf
@@ -66,15 +65,15 @@ import uk.ac.leeds.ccg.andyt.math.Math_Short;
  * @author Andy Turner
  * @version 1.0.0
  */
-public class WaASCJ_Main extends WaASCJ_Object {
+public class WaASCG_Main extends WaASCG_Object {
 
     public final HashMap<Integer, String> indents;
     public final String indent;
 
-//    protected WaASCJ_Main() {
+//    protected WaASCG_Main() {
 //        super();
 //    }
-    public WaASCJ_Main(WaASCJ_Environment env) {
+    public WaASCG_Main(WaASCG_Environment env) {
         super(env);
         indents = new HashMap<>();
         indent = "    ";
@@ -83,16 +82,16 @@ public class WaASCJ_Main extends WaASCJ_Object {
     public static void main(String[] args) {
         try {
             Data_Environment de = new Data_Environment(new Generic_Environment());
-            File dataDir = new File(de.files.getDir(), WaASCJ_Strings.s_WaAS);
-            WaASCJ_Environment e = new WaASCJ_Environment(de, dataDir);
-            WaASCJ_Main p = new WaASCJ_Main(e);
+            File dataDir = new File(de.files.getDir(), WaASCG_Strings.s_WaAS);
+            WaASCG_Environment e = new WaASCG_Environment(de, dataDir);
+            WaASCG_Main p = new WaASCG_Main(e);
             String type;
             // hhold
-            type = WaASCJ_Strings.s_hhold;
+            type = WaASCG_Strings.s_hhold;
             Object[] hholdTypes = p.getFieldTypes(type);
             p.run(type, hholdTypes);
             // person
-            type = WaASCJ_Strings.s_person;
+            type = WaASCG_Strings.s_person;
             Object[] personTypes = p.getFieldTypes(type);
             p.run(type, personTypes);
         } catch (IOException ex) {
@@ -117,7 +116,7 @@ public class WaASCJ_Main extends WaASCJ_Object {
         Object[] r = new Object[4];
         File indir = we.files.getInputWaASDir();
         File generateddir = we.files.getGeneratedWaASDir();
-        File outdir = new File(generateddir, WaASCJ_Strings.s_Subsets);
+        File outdir = new File(generateddir, WaASCG_Strings.s_Subsets);
         outdir.mkdirs();
         HashMap<String, Integer>[] allFieldTypes = new HashMap[nwaves];
         String[][] headers = new String[nwaves][];
@@ -169,7 +168,7 @@ public class WaASCJ_Main extends WaASCJ_Object {
                                             throw new Exception("unrecognised type");
                                         } catch (Exception ex) {
                                             ex.printStackTrace(System.err);
-                                            Logger.getLogger(WaASCJ_Main.class.getName()).log(Level.SEVERE, null, ex);
+                                            Logger.getLogger(WaASCG_Main.class.getName()).log(Level.SEVERE, null, ex);
                                         }
                                     }
                                 }
@@ -214,7 +213,7 @@ public class WaASCJ_Main extends WaASCJ_Object {
      * @throws java.io.FileNotFoundException If one is encountered.
      */
     public Object[] loadTest(int wave, String TYPE, File indir) throws FileNotFoundException {
-        String m = "loadTest(wave " + wave + ", Type " + TYPE + ", indir "
+        String m = "loadTest(wave=" + wave + ", Type=" + TYPE + ", indir="
                 + indir.toString() + ")";
         env.logStartTag(m);
         Object[] r = new Object[9];
@@ -397,18 +396,18 @@ public class WaASCJ_Main extends WaASCJ_Object {
         TreeSet<String>[] fields = getFields(headers);
         HashMap<String, Byte> v0m0 = setCommonBooleanMaps(v0ms, v1ms, fields, fieldTypes);
         File outdir = we.files.getOutputDir();
-        outdir = new File(outdir, WaASCJ_Strings.s_src);
-        outdir = new File(outdir, WaASCJ_Strings.s_main);
-        outdir = new File(outdir, WaASCJ_Strings.s_java);
-        outdir = new File(outdir, WaASCJ_Strings.s_uk);
-        outdir = new File(outdir, WaASCJ_Strings.s_ac);
-        outdir = new File(outdir, WaASCJ_Strings.s_leeds);
-        outdir = new File(outdir, WaASCJ_Strings.s_ccg);
-        outdir = new File(outdir, WaASCJ_Strings.s_andyt);
-        outdir = new File(outdir, WaASCJ_Strings.s_generic);
-        outdir = new File(outdir, WaASCJ_Strings.s_data);
-        outdir = new File(outdir, WaASCJ_Strings.s_waas);
-        outdir = new File(outdir, WaASCJ_Strings.s_data);
+        outdir = new File(outdir, WaASCG_Strings.s_src);
+        outdir = new File(outdir, WaASCG_Strings.s_main);
+        outdir = new File(outdir, WaASCG_Strings.s_java);
+        outdir = new File(outdir, WaASCG_Strings.s_uk);
+        outdir = new File(outdir, WaASCG_Strings.s_ac);
+        outdir = new File(outdir, WaASCG_Strings.s_leeds);
+        outdir = new File(outdir, WaASCG_Strings.s_ccg);
+        outdir = new File(outdir, WaASCG_Strings.s_andyt);
+        outdir = new File(outdir, WaASCG_Strings.s_generic);
+        outdir = new File(outdir, WaASCG_Strings.s_data);
+        outdir = new File(outdir, WaASCG_Strings.s_waas);
+        outdir = new File(outdir, WaASCG_Strings.s_data);
         outdir = new File(outdir, type);
         outdir.mkdirs();
         String packageName;
@@ -420,12 +419,12 @@ public class WaASCJ_Main extends WaASCJ_Object {
         int wave;
         String className;
         String extendedClassName;
-        String prepend = WaASCJ_Strings.s_WaAS + WaASCJ_Strings.symbol_underscore;
+        String prepend = WaASCG_Strings.s_WaAS + WaASCG_Strings.symbol_underscore;
         type = type.toUpperCase().substring(0, 1);
 
         for (int w = 0; w <= nwaves; w++) {
             if (w < nwaves) {
-                // Non-abstract classes
+                // Abstract classes
                 wave = w + 1;
                 HashMap<String, Byte> v0m;
                 v0m = v0ms[w];
@@ -453,7 +452,7 @@ public class WaASCJ_Main extends WaASCJ_Object {
                         extendedClassName = "";
                         break;
                 }
-                boolean isAbstract = false;
+                boolean isAbstract = true;
                 printClassDeclarationSerialVersionUID(pw, packageName,
                         className, isAbstract, "", extendedClassName);
                 // Print Field Declarations Inits And Getters
@@ -484,7 +483,7 @@ public class WaASCJ_Main extends WaASCJ_Object {
                     String implementations = "";
                     printClassDeclarationSerialVersionUID(pw, packageName,
                             className, isAbstract, implementations, "");
-                    pw.println("protected String[] s;");
+                    pw.println(getIndent(1) + "protected String[] s;");
                 } else if (w == (nwaves + 1)) {
                     className = prepend + "W1W2" + type + "Record";
                     fout = new File(outdir, className + ".java");
@@ -525,10 +524,10 @@ public class WaASCJ_Main extends WaASCJ_Object {
 
     public void printGetID(PrintWriter pw) {
         pw.println();
-        pw.println("@Override");
-        pw.println("public WaAS_RecordID getID() {");
-        pw.println("return (WaAS_RecordID) ID;");
-        pw.println("}");
+        pw.println(getIndent(1) + "@Override");
+        pw.println(getIndent(1) + "public WaAS_RecordID getID() {");
+        pw.println(getIndent(2) + "return (WaAS_RecordID) ID;");
+        pw.println(getIndent(1) + "}");
     }
 
     public String getIndent(int i) {
@@ -586,6 +585,7 @@ public class WaASCJ_Main extends WaASCJ_Object {
         pw.println("/**");
         pw.println(" * Source code generated by " + this.getClass().getName());
         pw.println(" */");
+        pw.println();
         pw.println("package " + packageName + ";");
         if (imports != null) {
             imports.stream().forEach(i -> pw.println("import " + i + ";"));
@@ -604,6 +604,7 @@ public class WaASCJ_Main extends WaASCJ_Object {
     public void printClassDeclarationSerialVersionUID(PrintWriter pw,
             String packageName, String className, boolean isAbstract,
             String implementations, String extendedClassName) {
+        pw.println();
         pw.print("public ");
         if (isAbstract) {
             pw.print("abstract ");
@@ -616,9 +617,13 @@ public class WaASCJ_Main extends WaASCJ_Object {
             pw.print(" implements " + implementations);
         }
         pw.println(" {");
+        pw.println();
         /**
-         * This is not included for performance reasons. pw.println("private
-         * static final long serialVersionUID = " + serialVersionUID + ";");
+         * This is not included for performance reasons.
+         */
+        /**
+         * pw.println("private static final long serialVersionUID = " +
+         * serialVersionUID + ";");
          */
     }
 
@@ -653,7 +658,7 @@ public class WaASCJ_Main extends WaASCJ_Object {
         while (ite.hasNext()) {
             field = ite.next();
             fieldType = fieldTypes.get(field);
-            pw.print(getIndent(0));
+            pw.print(getIndent(1));
             switch (fieldType) {
                 case 0:
                     pw.println("protected String " + field + ";");
@@ -674,6 +679,7 @@ public class WaASCJ_Main extends WaASCJ_Object {
                     pw.println("protected boolean " + field + ";");
                     break;
             }
+            pw.println();
         }
     }
 
@@ -808,7 +814,7 @@ public class WaASCJ_Main extends WaASCJ_Object {
                 throw new Exception(uniqueString2 + " is not unique!");
             }
         } catch (Exception ex) {
-            Logger.getLogger(WaASCJ_Main.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WaASCG_Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         h1 = h1.replaceAll("\t", " ,");
         h1 = h1 + " ";
