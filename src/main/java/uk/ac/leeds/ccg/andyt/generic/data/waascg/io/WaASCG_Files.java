@@ -34,15 +34,24 @@ public class WaASCG_Files extends Data_Files {
         super(dataDir);
     }
 
-    public File getInputWaASDir() {
-        File r = new File(getInputDir(), WaASCG_Strings.s_WaAS);
+    @Override
+    public File getInputDir() {
+        File r = new File(super.getInputDir(), WaASCG_Strings.s_WaAS);
         r = new File(r, "UKDA-7215-tab");
         r = new File(r, "tab");
         return r;
     }
 
-    public File getGeneratedWaASDir() {
-        File r  = new File(getGeneratedDir(), WaASCG_Strings.s_WaAS);
+    @Override
+    public File getGeneratedDir() {
+        File r  = new File(super.getGeneratedDir(), WaASCG_Strings.s_WaASCG);
+        r.mkdirs();
+        return r;
+    }
+    
+    @Override
+    public File getOutputDir() {        
+        File r  = new File(super.getOutputDir(), WaASCG_Strings.s_WaASCG);
         r.mkdirs();
         return r;
     }
@@ -60,6 +69,6 @@ public class WaASCG_Files extends Data_Files {
             filename += "_v2";
         }
         filename += ".tab";
-        return new File(getInputWaASDir(), filename);
+        return new File(getInputDir(), filename);
     }
 }

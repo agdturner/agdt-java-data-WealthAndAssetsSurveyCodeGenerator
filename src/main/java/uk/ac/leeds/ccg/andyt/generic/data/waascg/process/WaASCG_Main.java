@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import uk.ac.leeds.ccg.andyt.data.core.Data_Environment;
 import uk.ac.leeds.ccg.andyt.generic.core.Generic_Environment;
+import uk.ac.leeds.ccg.andyt.generic.core.Generic_Strings;
 import uk.ac.leeds.ccg.andyt.generic.data.waascg.core.WaASCG_Environment;
 import uk.ac.leeds.ccg.andyt.generic.data.waascg.core.WaASCG_Object;
 import uk.ac.leeds.ccg.andyt.generic.data.waascg.core.WaASCG_Strings;
@@ -82,8 +83,9 @@ public class WaASCG_Main extends WaASCG_Object {
     public static void main(String[] args) {
         try {
             Data_Environment de = new Data_Environment(new Generic_Environment());
-            File dataDir = new File(de.files.getDir(), WaASCG_Strings.s_WaAS);
-            WaASCG_Environment e = new WaASCG_Environment(de, dataDir);
+            //File dataDir = new File(de.files.getDir(), Generic_Strings.s_input);
+            //dataDir = new File(dataDir, WaASCG_Strings.s_WaAS);
+            WaASCG_Environment e = new WaASCG_Environment(de, de.files.getDir());
             WaASCG_Main p = new WaASCG_Main(e);
             String type;
             // hhold
@@ -114,8 +116,8 @@ public class WaASCG_Main extends WaASCG_Object {
     protected Object[] getFieldTypes(String type) throws IOException {
         int nwaves = we.NWAVES;
         Object[] r = new Object[4];
-        File indir = we.files.getInputWaASDir();
-        File generateddir = we.files.getGeneratedWaASDir();
+        File indir = we.files.getInputDir();
+        File generateddir = we.files.getGeneratedDir();
         File outdir = new File(generateddir, WaASCG_Strings.s_Subsets);
         outdir.mkdirs();
         HashMap<String, Integer>[] allFieldTypes = new HashMap[nwaves];
@@ -212,7 +214,7 @@ public class WaASCG_Main extends WaASCG_Object {
      * @return
      * @throws java.io.FileNotFoundException If one is encountered.
      */
-    public Object[] loadTest(int wave, String TYPE, File indir) throws FileNotFoundException {
+    public Object[] loadTest(int wave, String TYPE, File indir) throws FileNotFoundException, IOException {
         String m = "loadTest(wave=" + wave + ", Type=" + TYPE + ", indir="
                 + indir.toString() + ")";
         env.logStartTag(m);
@@ -221,8 +223,10 @@ public class WaASCG_Main extends WaASCG_Object {
         HashMap<String, Byte> v1m = new HashMap<>();
         //File f = getInputFile(wave, TYPE, indir);
         File f = we.files.getInputFile((byte) wave, TYPE);
-        BufferedReader br = io.getBufferedReader(f);
-        String line = br.lines().findFirst().get();
+        String line;
+        try (BufferedReader br = io.getBufferedReader(f)) {
+            line = br.lines().findFirst().get();
+        }
         String[] fields = parseHeader(line, wave);
         int n = fields.length;
         boolean[] strings = new boolean[n];
@@ -244,13 +248,18 @@ public class WaASCG_Main extends WaASCG_Object {
             v0[i] = Byte.MIN_VALUE;
             v1[i] = Byte.MIN_VALUE;
         }
-        br.lines().skip(1).forEach(l -> {
-            String[] split = l.split("\t");
-            for (int i = 0; i < n; i++) {
-                parse(split[i], fields[i], i, strings, doubles, ints, shorts,
-                        bytes, booleans, v0, v1, v0m, v1m);
+        try (BufferedReader br = io.getBufferedReader(f)) {
+            br.readLine(); // Skip header.
+            line = br.readLine();
+            while (line != null) {
+                String[] split = line.split("\t");
+                for (int i = 0; i < n; i++) {
+                    parse(split[i], fields[i], i, strings, doubles, ints, shorts,
+                            bytes, booleans, v0, v1, v0m, v1m);
+                }
+                line = br.readLine();
             }
-        });
+        }
         /**
          * Order v0m and v1m so that v0m always has the smaller value and v1m
          * the larger.
@@ -459,16 +468,7 @@ public class WaASCG_Main extends WaASCG_Object {
                 printFieldDeclarationsInitsAndGetters(pw, fields[w], fieldTypes,
                         v0m);
                 // Constructor
-                pw.println();
-                pw.println(getIndent(1) + "public " + className + "(WaAS_RecordID i, String line) {");
-                pw.println(getIndent(2) + "super(i);");
-                pw.println(getIndent(2) + "s = line.split(\"\\t\");");
-                for (int j = 0; j < headers[w].length; j++) {
-                    pw.println(getIndent(2) + "init" + headers[w][j] + "(s[" + j + "]);");
-                }
-                pw.println(getIndent(1) + "}");
-                printGetID(pw);
-                pw.println("}");
+                printConstructor(pw, className, headers, w);
                 pw.close();
             } else {
                 // Abstract classes
@@ -553,6 +553,28 @@ public class WaASCG_Main extends WaASCG_Object {
         pw.println(getIndent(1) + className + "(WaAS_RecordID i){");
         pw.println(getIndent(2) + "super(i);");
         pw.println(getIndent(1) + "}");
+    }
+
+    /**
+     * 
+     * @param pw
+     * @param className
+     * @param headers
+     * @param w 
+     */
+    public void printConstructor(PrintWriter pw, String className, String[][] headers, int w) {
+        try (pw) {
+            pw.println();
+            pw.println(getIndent(1) + "public " + className + "(WaAS_RecordID i, String line) throws Exception {");
+            pw.println(getIndent(2) + "super(i);");
+            pw.println(getIndent(2) + "s = line.split(\"\\t\");");
+            for (int j = 0; j < headers[w].length; j++) {
+                pw.println(getIndent(2) + "init" + headers[w][j] + "(s[" + j + "]);");
+            }
+            pw.println(getIndent(1) + "}");
+            printGetID(pw);
+            pw.println("}");
+        }
     }
 
     private ArrayList<String> imports0;

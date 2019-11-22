@@ -26,8 +26,9 @@ public class WaASCG_Strings extends Data_Strings {
     public static final String PROJECT_NAME = "agdt-java-generic-data-WealthAndAssetsSurveyCodeGenerator";
     public static final String s_hhold = "hhold";
     public static final String s_person = "person";
-    public static final String s_WaAS = "WaAS";
     public static final String s_waas = "waas";
+    public static final String s_WaAS = "WaAS";
+    public static final String s_WaASCG = "WaASCG";
 
     public WaASCG_Strings() {
         super();
