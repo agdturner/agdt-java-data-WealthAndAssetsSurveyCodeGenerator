@@ -33,7 +33,7 @@ Please see the pom.xml for details.
 Please raise issues and submit pull requests in the usual way. Contributions will be acknowledged.
 
 ## Acknowledgements
-The idea to write some code to write code to load data came from was developed during a collaboration with https://github.com/CrimsonSpear in a week of work experience working on https://github.com/agdturner/agdt-java-project-UKHousingInequality/. 
+https://github.com/CrimsonSpear instigated the development of this library in a week of work experience contributing to https://github.com/agdturner/agdt-java-project-UKHousingInequality/.
 
 ## LICENCE
 Please see the standard Apache 2.0 open source LICENCE.
