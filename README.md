@@ -1,7 +1,7 @@
 # Wealth and Assets Survey Java Code Generation Library
 https://github.com/agdturner/agdt-java-generic-data-WealthAndAssetsSurveyCodeGenerator
 
-A Java library for parsing Office of National Statistics Wealth and Assets Survey (WaAS) data to generate Java source code for loading that data.
+A Java library for parsing UK Office of National Statistics Wealth and Assets Survey (WaAS) data to generate Java source code for loading that data.
 
 The generated Java source code forms part of the https://github.com/agdturner/agdt-java-generic-data-WealthAndAssetsSurvey/ Java library - a distinct library for processing WaAS data. Specifically, this is the code found in the following packages:
 1. https://github.com/agdturner/agdt-java-generic-data-WealthAndAssetsSurvey/tree/master/src/main/java/uk/ac/leeds/ccg/andyt/generic/data/waas/data/hhold
