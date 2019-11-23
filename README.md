@@ -7,7 +7,7 @@ The generated Java source code forms part of the https://github.com/agdturner/ag
 1. https://github.com/agdturner/agdt-java-generic-data-WealthAndAssetsSurvey/tree/master/src/main/java/uk/ac/leeds/ccg/andyt/generic/data/waas/data/hhold
 2. https://github.com/agdturner/agdt-java-generic-data-WealthAndAssetsSurvey/tree/master/src/main/java/uk/ac/leeds/ccg/andyt/generic/data/waas/data/person
 
-The WaAS data are described on the ONS Website:
+The WaAS is described on the ONS Website:
 https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/debt/methodologies/wealthandassetssurveyqmi
 
 Waves 1 to 5 are available for academic research via the UKDS:
