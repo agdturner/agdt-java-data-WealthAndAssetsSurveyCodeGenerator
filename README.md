@@ -3,15 +3,16 @@ https://github.com/agdturner/agdt-java-generic-data-WealthAndAssetsSurveyCodeGen
 
 A Java library for parsing Office of National Statistics Wealth and Assets Survey (WaAS) data to generate Java source code for loading that data.
 
-The generated Java source code forms part of the https://github.com/agdturner/agdt-java-generic-data-WealthAndAssetsSurvey/ Java library - a distinct library for processing this data. Specifically, this is the code found in the following packages:
+The generated Java source code forms part of the https://github.com/agdturner/agdt-java-generic-data-WealthAndAssetsSurvey/ Java library - a distinct library for processing WaAS data. Specifically, this is the code found in the following packages:
 1. https://github.com/agdturner/agdt-java-generic-data-WealthAndAssetsSurvey/tree/master/src/main/java/uk/ac/leeds/ccg/andyt/generic/data/waas/data/hhold
 2. https://github.com/agdturner/agdt-java-generic-data-WealthAndAssetsSurvey/tree/master/src/main/java/uk/ac/leeds/ccg/andyt/generic/data/waas/data/person
 
-The Office of National Statistics Wealth and Assets Survey (WaAS) data are described on the ONS Website:
+The WaAS data are described on the ONS Website:
 https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/debt/methodologies/wealthandassetssurveyqmi
 
-Waves 1 to 5 of the Survey are available for academic research via the UKDS:
+Waves 1 to 5 are available for academic research via the UKDS:
 https://beta.ukdataservice.ac.uk/datacatalogue/studies/study?id=7215
+
 Wave 6 is due for release in 2019.
 
 Each wave of the data has two files:
@@ -20,16 +21,19 @@ Each wave of the data has two files:
 
 Each type of file has quite a lot of variables and there are some subtle changes in variables between waves.
 
-This library is for automatically parsing the WaAS data to discover what the common variables in the files across the waves are and what data types can best represent the values of these variables. It produces some Java source code that makes it easy to load and process these data. The generated Java source code are added to another library. This library was separated from that other library due to both complications in compiling the source code and to make it easier to abstract and generalise the code specifically for generating Java source code.
+This library is useful as it parses the WaAS data to discover: what the commonnly named variables in the files are across the waves; and, what data types can best represent them. It s for producing Java source code that makes it easy to load and process the data. The generated Java source code are added to another library. This library was separated from that other library to reduce compilation complications and to make it easier to abstract and generalise the code specifically for generating Java source code.
 
-Some of the Java code generation methods are generic and are being abstracted to the following library:
+The more generic Java code generation methods are being abstracted to the following library:
 https://github.com/agdturner/agdt-java-generic-CodeGenerator
 
 ## Dependencies
 Please see the pom.xml for details.
 
 ## Contributions
-Please raise issues and submit pull requests in the usual way. Contributions will be acknowledged. 
+Please raise issues and submit pull requests in the usual way. Contributions will be acknowledged.
+
+## Acknowledgements
+The idea to write some code to write code to load data came from was developed during a collaboration with https://github.com/CrimsonSpear in a week of work experience working on https://github.com/agdturner/agdt-java-project-UKHousingInequality/. 
 
 ## LICENCE
 Please see the standard Apache 2.0 open source LICENCE.
