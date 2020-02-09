@@ -95,10 +95,10 @@ public class WaASCG_Main extends WaASCG_Object {
             String type;
             Path outdir;
 //            // hhold
-            type = WaASCG_Strings.s_hhold;
-            Object[]  hholdTypes = p.getFieldTypes(type);
-            outdir = p.run(type, hholdTypes);
-            de.env.log("Generated code was written to " + outdir.toString());
+//            type = WaASCG_Strings.s_hhold;
+//            Object[]  hholdTypes = p.getFieldTypes(type);
+//            outdir = p.run(type, hholdTypes);
+//            de.env.log("Generated code was written to " + outdir.toString());
             // person
             type = WaASCG_Strings.s_person;
             Object[] personTypes = p.getFieldTypes(type);
@@ -429,10 +429,6 @@ public class WaASCG_Main extends WaASCG_Object {
                 WaASCG_Strings.s_data, type);
         Files.createDirectories(outdir);
         String packageName = "uk.ac.leeds.ccg.data.waas.data." + type;
-        Path fout;
-        PrintWriter pw;
-        int wave;
-        String className;
         String extendedClassName;
         String prepend = WaASCG_Strings.s_WaAS + WaASCG_Strings.symbol_underscore;
         type = type.toUpperCase().substring(0, 1);
@@ -440,89 +436,100 @@ public class WaASCG_Main extends WaASCG_Object {
         for (int w = 0; w <= nwaves + 3; w++) {
             if (w < nwaves) {
                 // Classes
-                wave = w + 1;
+                int wave = w + 1;
                 HashMap<String, Byte> v0m = v0ms[w];
-                className = prepend + "W" + wave + type + "Record";
-                fout = Paths.get(outdir.toString(), className + ".java");
-                pw = Generic_IO.getPrintWriter(fout, false);
-                writeHeaderPackageAndImports(pw, packageName, getImports0());
-                boolean isAbstract = false;
-                switch (w) {
-                    case 0:
-                        extendedClassName = prepend + "W1W2" + type + "Record";
-                        break;
-                    case 1:
-                        extendedClassName = prepend + "W1W2" + type + "Record";
-                        break;
-                    case 2:
-                        extendedClassName = prepend + "W3W4W5" + type + "Record";
-                        break;
-                    case 3:
-                        extendedClassName = prepend + "W4W5" + type + "Record";
-                        break;
-                    case 4:
-                        extendedClassName = prepend + "W4W5" + type + "Record";
-                        break;
-                    default:
-                        extendedClassName = "";
-                        break;
+                String  className = prepend + "W" + wave + type + "Record";
+                Path fout = Paths.get(outdir.toString(), className + ".java");
+                try (PrintWriter pw = Generic_IO.getPrintWriter(fout, false)) {
+                    writeHeaderPackageAndImports(pw, packageName, getImports0());
+                    boolean isAbstract = false;
+                    switch (w) {
+                        case 0:
+                            extendedClassName = prepend + "W1W2" + type + "Record";
+                            break;
+                        case 1:
+                            extendedClassName = prepend + "W1W2" + type + "Record";
+                            break;
+                        case 2:
+                            extendedClassName = prepend + "W3W4W5" + type + "Record";
+                            break;
+                        case 3:
+                            extendedClassName = prepend + "W4W5" + type + "Record";
+                            break;
+                        case 4:
+                            extendedClassName = prepend + "W4W5" + type + "Record";
+                            break;
+                        default:
+                            extendedClassName = "";
+                            break;
+                    }
+                    printClassDeclarationSerialVersionUID(pw, packageName,
+                            className, isAbstract, "", extendedClassName);
+                    // Print Field Declarations Inits And Getters
+                    printFieldDeclarationsInitsAndGetters(pw, fields[w], fieldTypes,
+                            v0m);
+                    // Constructor
+                    printConstructor(pw, className, headers, w);
                 }
-                printClassDeclarationSerialVersionUID(pw, packageName,
-                        className, isAbstract, "", extendedClassName);
-                // Print Field Declarations Inits And Getters
-                printFieldDeclarationsInitsAndGetters(pw, fields[w], fieldTypes,
-                        v0m);
-                // Constructor
-                printConstructor(pw, className, headers, w);
-                pw.close();
             } else {
                 // Abstract classes
-                pw = null;
                 boolean isAbstract = true;
                 if (w == nwaves) {
-                    className = prepend + "W1W2W3W4W5" + type + "Record";
-                    fout = Paths.get(outdir.toString(), className + ".java");
-                    pw = Generic_IO.getPrintWriter(fout, false);
-                    writeHeaderPackageAndImports(pw, packageName, getImports1());
-                    //String implementations = "Serializable";
-                    String implementations = "";
-                    printClassDeclarationSerialVersionUID(pw, packageName,
-                            className, isAbstract, implementations, "Data_Record");
-                    pw.println();
-                    pw.println(getIndent(1) + "protected String[] s;");
-                    printConstructor(pw, className);
+                    String className = prepend + "W1W2W3W4W5" + type + "Record";
+                    Path fout = Paths.get(outdir.toString(), className + ".java");
+                    try (PrintWriter pw = Generic_IO.getPrintWriter(fout, false)) {
+                        writeHeaderPackageAndImports(pw, packageName, getImports1());
+                        //String implementations = "Serializable";
+                        String implementations = "";
+                        printClassDeclarationSerialVersionUID(pw, packageName,
+                                className, isAbstract, implementations, "Data_Record");
+                        pw.println();
+                        pw.println(getIndent(1) + "protected String[] s;");
+                        printConstructor(pw, className);
+                        // Print Field Declarations Inits And Getters
+                        printFieldDeclarationsInitsAndGetters(pw, fields[w], fieldTypes, v0m0);
+                        pw.println("}");
+                    }
                 } else if (w == (nwaves + 1)) {
-                    className = prepend + "W1W2" + type + "Record";
-                    fout = Paths.get(outdir.toString(), className + ".java");
-                    pw = Generic_IO.getPrintWriter(fout, false);
-                    writeHeaderPackageAndImports(pw, packageName, getImports0());
-                    extendedClassName = prepend + "W1W2W3W4W5" + type + "Record";
-                    printClassDeclarationSerialVersionUID(pw, packageName,
-                            className, isAbstract, "", extendedClassName);
-                    printConstructor(pw, className);
+                    String className = prepend + "W1W2" + type + "Record";
+                    Path fout = Paths.get(outdir.toString(), className + ".java");
+                    try (PrintWriter pw = Generic_IO.getPrintWriter(fout, false)) {
+                        writeHeaderPackageAndImports(pw, packageName, getImports0());
+                        extendedClassName = prepend + "W1W2W3W4W5" + type + "Record";
+                        printClassDeclarationSerialVersionUID(pw, packageName,
+                                className, isAbstract, "", extendedClassName);
+                        printConstructor(pw, className);
+                        // Print Field Declarations Inits And Getters
+                        printFieldDeclarationsInitsAndGetters(pw, fields[w], fieldTypes, v0m0);
+                        pw.println("}");
+                    }
                 } else if (w == (nwaves + 2)) {
-                    className = prepend + "W3W4W5" + type + "Record";
-                    fout = Paths.get(outdir.toString(), className + ".java");
-                    pw = Generic_IO.getPrintWriter(fout, false);
-                    writeHeaderPackageAndImports(pw, packageName, getImports0());
-                    extendedClassName = prepend + "W1W2W3W4W5" + type + "Record";
-                    printClassDeclarationSerialVersionUID(pw, packageName,
-                            className, isAbstract, "", extendedClassName);
-                    printConstructor(pw, className);
+                    String className = prepend + "W3W4W5" + type + "Record";
+                    Path fout = Paths.get(outdir.toString(), className + ".java");
+                    try (PrintWriter pw = Generic_IO.getPrintWriter(fout, false)) {
+                        writeHeaderPackageAndImports(pw, packageName, getImports0());
+                        extendedClassName = prepend + "W1W2W3W4W5" + type + "Record";
+                        printClassDeclarationSerialVersionUID(pw, packageName,
+                                className, isAbstract, "", extendedClassName);
+                        printConstructor(pw, className);
+                        // Print Field Declarations Inits And Getters
+                        printFieldDeclarationsInitsAndGetters(pw, fields[w], fieldTypes, v0m0);
+                        pw.println("}");
+                    }
                 } else if (w == (nwaves + 3)) {
-                    className = prepend + "W4W5" + type + "Record";
-                    fout = Paths.get(outdir.toString(), className + ".java");
-                    pw = Generic_IO.getPrintWriter(fout, false);
-                    writeHeaderPackageAndImports(pw, packageName, getImports0());
-                    extendedClassName = prepend + "W3W4W5" + type + "Record";
-                    printClassDeclarationSerialVersionUID(pw, packageName,
-                            className, isAbstract, "", extendedClassName);
-                    printConstructor(pw, className);
+                    String className = prepend + "W4W5" + type + "Record";
+                    Path fout = Paths.get(outdir.toString(), className + ".java");
+                    try (PrintWriter pw = Generic_IO.getPrintWriter(fout, false)) {
+                        writeHeaderPackageAndImports(pw, packageName, getImports0());
+                        extendedClassName = prepend + "W3W4W5" + type + "Record";
+                        printClassDeclarationSerialVersionUID(pw, packageName,
+                                className, isAbstract, "", extendedClassName);
+                        printConstructor(pw, className);
+                        // Print Field Declarations Inits And Getters
+                        printFieldDeclarationsInitsAndGetters(pw, fields[w], fieldTypes, v0m0);
+                        pw.println("}");
+                    }
                 }
-                // Print Field Declarations Inits And Getters
-                printFieldDeclarationsInitsAndGetters(pw, fields[w], fieldTypes, v0m0);
-                pw.println("}");
-                pw.close();
             }
         }
         return outdir;
@@ -568,18 +575,16 @@ public class WaASCG_Main extends WaASCG_Object {
      * @param w
      */
     public void printConstructor(PrintWriter pw, String className, String[][] headers, int w) {
-        try (pw) {
-            pw.println();
-            pw.println(getIndent(1) + "public " + className + "(WaAS_RecordID i, String line) throws Exception {");
-            pw.println(getIndent(2) + "super(i);");
-            pw.println(getIndent(2) + "s = line.split(\"\\t\");");
-            for (int j = 0; j < headers[w].length; j++) {
-                pw.println(getIndent(2) + "init" + headers[w][j] + "(s[" + j + "]);");
-            }
-            pw.println(getIndent(1) + "}");
-            printGetID(pw);
-            pw.println("}");
+        pw.println();
+        pw.println(getIndent(1) + "public " + className + "(WaAS_RecordID i, String line) throws Exception {");
+        pw.println(getIndent(2) + "super(i);");
+        pw.println(getIndent(2) + "s = line.split(\"\\t\");");
+        for (int j = 0; j < headers[w].length; j++) {
+            pw.println(getIndent(2) + "init" + headers[w][j] + "(s[" + j + "]);");
         }
+        pw.println(getIndent(1) + "}");
+        printGetID(pw);
+        pw.println("}");
     }
 
     private ArrayList<String> imports0;
