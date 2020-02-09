@@ -122,7 +122,7 @@ public class WaASCG_Main extends WaASCG_Object {
      * be represented by a boolean.
      * @throws java.io.IOException If one is encountered.
      */
-    protected Object[] getFieldTypes(String type) throws IOException {
+    protected Object[] getFieldTypes(String type) throws IOException, Exception {
         int nwaves = we.NWAVES;
         Object[] r = new Object[4];
         Path indir = we.files.getInputDir();
@@ -152,35 +152,30 @@ public class WaASCG_Main extends WaASCG_Object {
             for (int i = 0; i < strings.length; i++) {
                 String field = fields[i];
                 if (strings[i]) {
-                    System.out.println("" + i + " " + "String");
+                    //System.out.println("" + i + " " + "String");
                     fieldTypes.put(field, 0);
                 } else {
                     if (doubles[i]) {
-                        System.out.println("" + i + " " + "double");
+                        //System.out.println("" + i + " " + "double");
                         fieldTypes.put(field, 1);
                     } else {
                         if (ints[i]) {
-                            System.out.println("" + i + " " + "int");
+                            //System.out.println("" + i + " " + "int");
                             fieldTypes.put(field, 2);
                         } else {
                             if (shorts[i]) {
-                                System.out.println("" + i + " " + "short");
+                                //System.out.println("" + i + " " + "short");
                                 fieldTypes.put(field, 3);
                             } else {
                                 if (bytes[i]) {
-                                    System.out.println("" + i + " " + "byte");
+                                    //System.out.println("" + i + " " + "byte");
                                     fieldTypes.put(field, 4);
                                 } else {
                                     if (booleans[i]) {
-                                        System.out.println("" + i + " " + "boolean");
+                                        //System.out.println("" + i + " " + "boolean");
                                         fieldTypes.put(field, 5);
                                     } else {
-                                        try {
-                                            throw new Exception("unrecognised type");
-                                        } catch (Exception ex) {
-                                            ex.printStackTrace(System.err);
-                                            Logger.getLogger(WaASCG_Main.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
+                                        throw new Exception("unrecognised type");
                                     }
                                 }
                             }
