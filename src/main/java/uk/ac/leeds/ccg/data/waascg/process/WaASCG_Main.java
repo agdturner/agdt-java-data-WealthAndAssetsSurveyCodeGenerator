@@ -94,11 +94,11 @@ public class WaASCG_Main extends WaASCG_Object {
             WaASCG_Main p = new WaASCG_Main(e);
             String type;
             Path outdir;
-//            // hhold
-//            type = WaASCG_Strings.s_hhold;
-//            Object[]  hholdTypes = p.getFieldTypes(type);
-//            outdir = p.run(type, hholdTypes);
-//            de.env.log("Generated code was written to " + outdir.toString());
+            // hhold
+            type = WaASCG_Strings.s_hhold;
+            Object[]  hholdTypes = p.getFieldTypes(type);
+            outdir = p.run(type, hholdTypes);
+            de.env.log("Generated code was written to " + outdir.toString());
             // person
             type = WaASCG_Strings.s_person;
             Object[] personTypes = p.getFieldTypes(type);
@@ -622,7 +622,10 @@ public class WaASCG_Main extends WaASCG_Object {
         pw.println();
         pw.println("package " + packageName + ";");
         if (imports != null) {
-            imports.stream().forEach(i -> pw.println("import " + i + ";"));
+            Iterator<String> ite = imports.iterator();
+            while (ite.hasNext()) {
+                pw.println("import " + ite.next() + ";");
+            }
         }
         pw.flush();
     }
