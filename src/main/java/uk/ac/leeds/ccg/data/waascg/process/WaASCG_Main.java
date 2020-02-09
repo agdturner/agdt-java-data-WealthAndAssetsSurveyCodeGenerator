@@ -85,21 +85,26 @@ public class WaASCG_Main extends WaASCG_Object {
 
     public static void main(String[] args) {
         try {
+            Path dataDir = Paths.get(System.getProperty("user.home"),
+                    WaASCG_Strings.s_data, WaASCG_Strings.s_data,
+                    WaASCG_Strings.s_WaAS);
             Data_Environment de = new Data_Environment(new Generic_Environment(
-                    new Generic_Defaults()));
-            //Path dataDir = Paths.get(de.files.getDir(), Generic_Strings.s_input);
-            //dataDir = Paths.get(dataDir, WaASCG_Strings.s_WaAS);
+                    new Generic_Defaults(dataDir)));
             WaASCG_Environment e = new WaASCG_Environment(de, de.files.getDir());
             WaASCG_Main p = new WaASCG_Main(e);
             String type;
-            // hhold
+            Path outdir;
+//            // hhold
             type = WaASCG_Strings.s_hhold;
-            Object[] hholdTypes = p.getFieldTypes(type);
-            p.run(type, hholdTypes);
+            Object[]  hholdTypes = p.getFieldTypes(type);
+            outdir = p.run(type, hholdTypes);
+            de.env.log("Generated code was written to " + outdir.toString());
             // person
             type = WaASCG_Strings.s_person;
             Object[] personTypes = p.getFieldTypes(type);
             p.run(type, personTypes);
+            outdir = p.run(type, personTypes);
+            de.env.log("Generated code was written to " + outdir.toString());
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
         }
@@ -401,7 +406,14 @@ public class WaASCG_Main extends WaASCG_Object {
         }
     }
 
-    public void run(String type, Object[] types) throws IOException {
+    /**
+     *
+     * @param type
+     * @param types
+     * @return The output directory path.
+     * @throws IOException
+     */
+    public Path run(String type, Object[] types) throws IOException {
         int nwaves = we.NWAVES;
         HashMap<String, Integer> fieldTypes = (HashMap<String, Integer>) types[0];
         String[][] headers = (String[][]) types[1];
@@ -429,8 +441,7 @@ public class WaASCG_Main extends WaASCG_Object {
             if (w < nwaves) {
                 // Classes
                 wave = w + 1;
-                HashMap<String, Byte> v0m;
-                v0m = v0ms[w];
+                HashMap<String, Byte> v0m = v0ms[w];
                 className = prepend + "W" + wave + type + "Record";
                 fout = Paths.get(outdir.toString(), className + ".java");
                 pw = Generic_IO.getPrintWriter(fout, false);
@@ -514,14 +525,14 @@ public class WaASCG_Main extends WaASCG_Object {
                 pw.close();
             }
         }
-
+        return outdir;
     }
 
     public void printGetID(PrintWriter pw) {
         pw.println();
         pw.println(getIndent(1) + "@Override");
         pw.println(getIndent(1) + "public WaAS_RecordID getID() {");
-        pw.println(getIndent(2) + "return (WaAS_RecordID) ID;");
+        pw.println(getIndent(2) + "return (WaAS_RecordID) id;");
         pw.println(getIndent(1) + "}");
     }
 
@@ -576,7 +587,7 @@ public class WaASCG_Main extends WaASCG_Object {
     private ArrayList<String> getImports0() {
         if (imports0 == null) {
             imports0 = new ArrayList<>();
-            imports0.add("uk.ac.leeds.ccg.andyt.generic.data.waas.data.id.WaAS_RecordID");
+            imports0.add("uk.ac.leeds.ccg.data.waas.data.id.WaAS_RecordID");
         }
         return imports0;
     }
@@ -585,8 +596,9 @@ public class WaASCG_Main extends WaASCG_Object {
 
     private ArrayList<String> getImports1() {
         if (imports1 == null) {
-            imports1 = getImports0();
-            imports1.add("uk.ac.leeds.ccg.andyt.data.Data_Record");
+            imports1 = new ArrayList<>();
+            imports1.addAll(getImports0());
+            imports1.add("uk.ac.leeds.ccg.data.Data_Record");
         }
         return imports1;
     }
@@ -607,6 +619,7 @@ public class WaASCG_Main extends WaASCG_Object {
         if (imports != null) {
             imports.stream().forEach(i -> pw.println("import " + i + ";"));
         }
+        pw.flush();
     }
 
     /**
@@ -642,6 +655,7 @@ public class WaASCG_Main extends WaASCG_Object {
          * pw.println("private static final long serialVersionUID = " +
          * serialVersionUID + ";");
          */
+        //pw.flush();
     }
 
     /**
@@ -668,13 +682,10 @@ public class WaASCG_Main extends WaASCG_Object {
      */
     public void printFieldDeclarations(PrintWriter pw, TreeSet<String> fields,
             HashMap<String, Integer> fieldTypes) {
-        String field;
-        int fieldType;
-        Iterator<String> ite;
-        ite = fields.iterator();
+        Iterator<String> ite = fields.iterator();
         while (ite.hasNext()) {
-            field = ite.next();
-            fieldType = fieldTypes.get(field);
+            String field = ite.next();
+            int fieldType = fieldTypes.get(field);
             pw.print(getIndent(1));
             switch (fieldType) {
                 case 0:
@@ -698,6 +709,7 @@ public class WaASCG_Main extends WaASCG_Object {
             }
             pw.println();
         }
+        //pw.flush();
     }
 
     /**
@@ -737,6 +749,7 @@ public class WaASCG_Main extends WaASCG_Object {
             pw.println(getIndent(1) + "}");
             pw.println();
         }
+        pw.flush();
     }
 
     /**
@@ -806,6 +819,7 @@ public class WaASCG_Main extends WaASCG_Object {
             pw.println(getIndent(1) + "}");
             pw.println();
         }
+        //pw.flush();
     }
 
     /**
@@ -906,22 +920,28 @@ public class WaASCG_Main extends WaASCG_Object {
     }
 
     /**
-     * Finds and returns r where. r[0] are the fields in common with all waves.
-     * r[1] are the fields in common with all waves. r[2] are the fields in
-     * common with all waves. r[3] are the fields in common with all waves. r[4]
-     * are the fields in common with all waves. r[5] fields common to waves 1,
-     * 2, 3, 4 and 5 (12345) r[6] fields other than 12345 that are common to
-     * waves 1 and 2 (12). r[7] fields other than 12345 that are in common to
-     * waves 3, 4 and 5 (345) r[8] fields other than 345 that are in common to
-     * waves 4 and 5 (45)
+     * Finds and returns r where.
+     * <ul>
+     * <li>r[0] are the fields in common with all waves.</li>
+     * <li>r[1] are the fields in common with all waves.</li>
+     * <li>r[2] are the fields in common with all waves.</li>
+     * <li>r[3] are the fields in common with all waves.</li>
+     * <li>r[4] are the fields in common with all waves.</li>
+     * <li>r[5] fields common to waves 1, 2, 3, 4 and 5 (12345)</li>
+     * <li>r[6] fields other than 12345 that are common to waves 1 and 2
+     * (12).</li>
+     * <li>r[7] fields other than 12345 that are in common to waves 3, 4 and 5
+     * (345)</li>
+     * <li>r[8] fields other than 345 that are in common to waves 4 and 5
+     * (45)</li>
+     * </ul>
      *
      * @param headers
      * @return
      */
     public TreeSet<String>[] getFields(String[][] headers) {
         TreeSet<String>[] r;
-        int size;
-        size = headers.length;
+        int size = headers.length;
         r = new TreeSet[(size * 2) - 1];
         for (int i = 0; i < 5; i++) {
             r[i] = getFields(headers[i]);
