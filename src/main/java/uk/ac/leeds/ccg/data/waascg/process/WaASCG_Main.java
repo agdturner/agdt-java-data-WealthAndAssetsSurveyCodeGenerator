@@ -29,10 +29,10 @@ import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import uk.ac.leeds.ccg.cg.process.CG_Process;
 import uk.ac.leeds.ccg.data.core.Data_Environment;
 import uk.ac.leeds.ccg.generic.core.Generic_Environment;
 import uk.ac.leeds.ccg.data.waascg.core.WaASCG_Environment;
-import uk.ac.leeds.ccg.data.waascg.core.WaASCG_Object;
 import uk.ac.leeds.ccg.data.waascg.core.WaASCG_Strings;
 import uk.ac.leeds.ccg.generic.io.Generic_Defaults;
 import uk.ac.leeds.ccg.generic.io.Generic_IO;
@@ -69,18 +69,15 @@ import uk.ac.leeds.ccg.math.Math_Short;
  * @author Andy Turner
  * @version 1.0.0
  */
-public class WaASCG_Main extends WaASCG_Object {
+public class WaASCG_Main extends CG_Process {
 
-    public final HashMap<Integer, String> indents;
-    public final String indent;
+    public final WaASCG_Environment we;
+    public final Generic_Environment env;
 
-//    protected WaASCG_Main() {
-//        super();
-//    }
-    public WaASCG_Main(WaASCG_Environment env) {
-        super(env);
-        indents = new HashMap<>();
-        indent = "    ";
+    public WaASCG_Main(WaASCG_Environment e) {
+        super();
+        we = e;
+        env = we.env;
     }
 
     public static void main(String[] args) {
@@ -222,7 +219,7 @@ public class WaASCG_Main extends WaASCG_Object {
             throws FileNotFoundException, IOException {
         String m = "loadTest(wave=" + wave + ", Type=" + TYPE + ", indir="
                 + indir.toString() + ")";
-        env.logStartTag(m);
+        we.env.logStartTag(m);
         Object[] r = new Object[9];
         HashMap<String, Byte> v0m = new HashMap<>();
         HashMap<String, Byte> v1m = new HashMap<>();
@@ -538,17 +535,7 @@ public class WaASCG_Main extends WaASCG_Object {
         pw.println(getIndent(1) + "}");
     }
 
-    public String getIndent(int i) {
-        if (!indents.containsKey(i)) {
-            String s = "";
-            for (int j = 0; j < i; j++) {
-                s += indent;
-            }
-            indents.put(i, s);
-            return s;
-        }
-        return indents.get(i);
-    }
+    
 
     /**
      *
