@@ -530,7 +530,7 @@ public class WaASCG_Main extends CG_Process {
     public void printGetID(PrintWriter pw) {
         pw.println();
         pw.println(getIndent(1) + "@Override");
-        pw.println(getIndent(1) + "public WaAS_RecordID getID() {");
+        pw.println(getIndent(1) + "public WaAS_RecordID getId() {");
         pw.println(getIndent(2) + "return (WaAS_RecordID) id;");
         pw.println(getIndent(1) + "}");
     }

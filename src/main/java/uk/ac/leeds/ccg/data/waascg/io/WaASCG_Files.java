@@ -64,7 +64,7 @@ public class WaASCG_Files extends Data_Files {
      */
     public Path getInputFile(byte wave, String type) throws IOException {
         String filename = "was_wave_" + wave + "_" + type + "_eul_final";
-        if (wave < 4) {
+        if (wave < 2) {
             filename += "_v2";
         }
         filename += ".tab";
